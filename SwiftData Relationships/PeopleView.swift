@@ -6,13 +6,44 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct PeopleView: View {
+    @Environment(\.modelContext) private var context
+    @State private var ageText = ""
+    @State private var nameText = ""
+    
+    
+    var selectedFamily: Family
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            
+            List(selectedFamily.people) { person in
+                Text(person.name)
+            }
+            
+            HStack {
+                TextField("Name", text: $nameText)
+                TextField("Age", text: $ageText)
+                
+                Button("Add") {
+                    let p = Person()
+                    p.age = Int(ageText)!
+                    p.name = nameText
+                    p.family = selectedFamily
+                    context.insert(p)
+                    
+                    nameText = ""
+                    ageText = ""
+                }
+                
+            }
+            .textFieldStyle(.roundedBorder)
+        }
     }
 }
 
-#Preview {
-    PeopleView()
-}
+//#Preview {
+//    PeopleView()
+//}
